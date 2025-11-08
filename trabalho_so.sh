@@ -1,23 +1,7 @@
 #!/usr/bin/env bash
-# ##############################################################
-# #                                                          # #
-# #                         IBMEC                           # #
-# #                   Sistemas Operacionais                 # #
-# #                   Código: IBM8940                        # #
-# #             Professor: Luiz Fernando T. de Farias       # #
-# #----------------------------------------------------------# #
-# #  Equipe Desenvolvedora:                                  # #
-# #  Aluno: $(whoami)                                        # #
-# #  Aluno: ______________________________________________   # #
-# #                                                          # #
-# #  Rio de Janeiro, $(date +"%d de %B de %Y")                # #
-# #  Hora do Sistema: $(date +"%H Horas e %M Minutos")        # #
-# #  Semestre $([[ $(date +%m) -le 6 ]] && echo 1 || echo 2) de $(date +%Y)               # #
-# ##############################################################
 
-# ============================
 # CONFIGURAÇÕES INICIAIS
-# ============================
+
 BASE_DIR=$(pwd)
 BACKUP_DIR="$BASE_DIR/_backups"
 mkdir -p "$BACKUP_DIR"
@@ -29,9 +13,9 @@ pausar() {
 
 linha() { printf '%*s\n' "${1:-60}" | tr ' ' '#'; }
 
-# ============================
-# OPÇÃO 1 – Mini Navegador de Diretórios (restrito ao diretório de trabalho)
-# ============================
+
+# OPÇÃO 1 – Navegador do Diretorio de Trabalho
+
 mini_navegador() {
   local atual="$BASE_DIR"
   while true; do
@@ -41,7 +25,9 @@ mini_navegador() {
     linha 60
     echo "Diretório atual: $atual"
     echo
+    # Lista itens (arquivos e diretórios)
     mapfile -t itens < <(ls -A "$atual" 2>/dev/null)
+
     if [ ${#itens[@]} -eq 0 ]; then
       echo "(vazio)"
     else
@@ -56,6 +42,7 @@ mini_navegador() {
     echo "V) Voltar ao menu principal"
     echo
     read -rp "Selecione um número, ou 'V': " esc
+
     case "$esc" in
       [Vv]) break ;;
       ''|*[!0-9]*) continue ;;
@@ -64,6 +51,7 @@ mini_navegador() {
         [ $idx -ge 0 ] && [ $idx -lt ${#itens[@]} ] || continue
         alvo="$atual/${itens[$idx]}"
         if [ -d "$alvo" ]; then
+          # Evitar sair do diretório base
           novo=$(cd "$alvo" 2>/dev/null && pwd)
           case "$novo" in
             "$BASE_DIR"|"$BASE_DIR"/*) atual="$novo" ;;
@@ -77,9 +65,9 @@ mini_navegador() {
   done
 }
 
-# ============================
-# OPÇÃO 2 – Mini Gerenciador de Tarefas (CPU/Memória/Disco)
-# ============================
+
+# OPÇÃO 2 – Status do Computador CPU/Memória/Disco
+
 mini_gerenciador() {
   while true; do
     clear
@@ -90,6 +78,7 @@ mini_gerenciador() {
     echo "Processos: $(ps -e --no-headers | wc -l)"
     echo
     echo "== CPU (load average) =="
+    # load averages (1,5,15min) do comando uptime
     uptime | sed 's/.*load average: /load average: /'
     echo
     echo "== Memória (free -h) =="
@@ -106,9 +95,9 @@ mini_gerenciador() {
   done
 }
 
-# ============================
+
 # OPÇÃO 3 – Criar Backup de um Diretório
-# ============================
+
 criar_backup() {
   clear
   echo "Diretório base permitido: $BASE_DIR"
@@ -135,9 +124,9 @@ criar_backup() {
   pausar
 }
 
-# ============================
+
 # OPÇÃO 4 – Restaurar Backup de um Diretório
-# ============================
+
 restaurar_backup() {
   clear
   echo "Backups disponíveis em: $BACKUP_DIR"
@@ -176,23 +165,22 @@ restaurar_backup() {
   pausar
 }
 
-# ============================
+
 # MENU PRINCIPAL
-# ============================
+
 while true; do
   clear
   echo "##############################################################"
   echo "# IBMEC                                                # Turma: 8001 #"
-  echo "# Sistemas Operacionais                                #"
+  echo "# Sistemas Operacionais                                # Semestre $([[ $(date +%m) -le 6 ]] && echo 1 || echo 2) de $(date +%Y) #"
   echo "# Código: IBM8940                                       #"
   echo "# Professor: Luiz Fernando T. de Farias                 #"
   echo "#--------------------------------------------------------------#"
-  echo "# Equipe Desenvolvedora:                                     #"
-  echo "# Aluno: $(whoami)                                           #"
-  echo "# Aluno: ______________________________________________      #"
+  echo "# Equipe Desenvolvedora: Enzo Perroni                        #"
+  echo "# Usuario: $(whoami)                                         #"
+  echo "# Aluno: Enzo Perroni                                        #"
   echo "# Rio de Janeiro, $(date +"%d de %B de %Y")                        #"
   echo "# Hora do Sistema: $(date +"%H Horas e %M Minutos")                  #"
-  echo "# Semestre $([[ $(date +%m) -le 6 ]] && echo 1 || echo 2) de $(date +%Y)                      #"
   echo "##############################################################"
   echo
   echo "Menu de Escolhas:"
